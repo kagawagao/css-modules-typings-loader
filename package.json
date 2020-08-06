@@ -8,6 +8,9 @@
     "acorn-walk": "^7.2.0",
     "prettier": "^2.0.5"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "@babel/cli": "^7.10.5",
     "@opd/babel-preset-lib": "^1.5.0",
