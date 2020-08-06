@@ -14,7 +14,12 @@ const content = `interface CSSModules {
 export const cssModules: CSSModules;
 export default cssModules;`
 const filePath = 'fixtures/example.module.css'
-const declarationFilePath = path.resolve(__dirname, filePath + '.d.ts')
+const namedCSSFilePath = 'fixtures/named.module.css'
+const lessFilePath = 'fixtures/less.module.less'
+
+function getDeclarationFilePath(filePath) {
+  return path.resolve(__dirname, filePath + '.d.ts')
+}
 
 function format(content: string) {
   return prettier.format(content, {
@@ -24,21 +29,38 @@ function format(content: string) {
 
 test('Basic', async () => {
   await compiler(filePath)
-  const output = await promisify(fs.readFile)(declarationFilePath, {
-    encoding: 'utf-8',
-  })
+  const output = await promisify(fs.readFile)(
+    getDeclarationFilePath(filePath),
+    {
+      encoding: 'utf-8',
+    }
+  )
   expect(format(output)).toEqual(format(content))
 })
 
 test('Named export', async () => {
-  await compiler(filePath, {
+  await compiler(namedCSSFilePath, {
     modules: {
       namedExport: true,
     },
   })
-  const output = await promisify(fs.readFile)(declarationFilePath, {
-    encoding: 'utf-8',
-  })
+  const output = await promisify(fs.readFile)(
+    getDeclarationFilePath(namedCSSFilePath),
+    {
+      encoding: 'utf-8',
+    }
+  )
 
+  expect(format(output)).toEqual(format(content))
+})
+
+test('CSS Preprocessor', async () => {
+  await compiler(lessFilePath)
+  const output = await promisify(fs.readFile)(
+    getDeclarationFilePath(lessFilePath),
+    {
+      encoding: 'utf-8',
+    }
+  )
   expect(format(output)).toEqual(format(content))
 })

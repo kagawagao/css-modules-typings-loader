@@ -14,7 +14,6 @@ import prettier from 'prettier'
 const loader: webpack.loader.Loader = function (content: string, sourceMap) {
   const callback = this.async()
   const declarationPath = this.resourcePath + '.d.ts'
-
   const parsed = parse(content, {
     sourceType: 'module',
   })
@@ -22,8 +21,18 @@ const loader: webpack.loader.Loader = function (content: string, sourceMap) {
   const keys = []
 
   simpleWalk(parsed, {
-    Property(node: any) {
-      keys.push(node.key.value)
+    ExpressionStatement(node) {
+      simpleWalk(node, {
+        // console.log(node)
+        AssignmentExpression(node: any) {
+          simpleWalk(node, {
+            Property(node: any) {
+              const key = node.key.value
+              keys.push(key)
+            },
+          })
+        },
+      })
     },
     ExportNamedDeclaration(node) {
       simpleWalk(node, {

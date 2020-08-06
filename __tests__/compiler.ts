@@ -24,6 +24,28 @@ export default (fixture, options = {}): Promise<webpack.Stats> => {
             },
           ],
         },
+        {
+          test: /\.less$/,
+          use: [
+            {
+              loader: path.resolve(__dirname, '../src/index.ts'),
+            },
+            {
+              loader: 'css-loader',
+              options: {
+                ...options,
+                sourceMap: true,
+                importLoaders: 1,
+              },
+            },
+            {
+              loader: 'less-loader',
+              options: {
+                sourceMap: true,
+              },
+            },
+          ],
+        },
       ],
     },
   })
