@@ -1,0 +1,24 @@
+name: build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js
+        uses: actions/setup-node@v1.1.0
+      - name: npm install, test and build
+        run: |
+          npm ci
+          npm run build
+      - name: Codecov
+        uses: codecov/codecov-action@v1.0.5
+        with:
+          # Repository upload token - get it from codecov.io
+          token: 94a32c70-7d5a-481e-ae1b-4b5b5ec09223
+
+        env:
+          CI: true

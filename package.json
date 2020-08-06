@@ -1,0 +1,60 @@
+{
+  "name": "css-modules-typings-loader",
+  "version": "0.0.0",
+  "description": "css modules typings loader for webpack",
+  "main": "lib/index.js",
+  "dependencies": {
+    "acorn": "^7.4.0",
+    "acorn-walk": "^7.2.0",
+    "prettier": "^2.0.5"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.10.5",
+    "@cisdi/babel-preset-lib": "^2.3.1",
+    "@cisdi/eslint-config-cisdi": "^2.3.1",
+    "@cisdi/jest-preset-cisdi": "^2.3.1",
+    "@cisdi/prettier-config-cisdi": "^2.0.0",
+    "@types/loader-runner": "^2.2.3",
+    "@types/webpack": "^4.41.21",
+    "cross-env": "^7.0.2",
+    "css-loader": "^4.2.0",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.11",
+    "memfs": "^3.2.0",
+    "regenerator-runtime": "^0.13.7",
+    "typescript": "^3.9.7",
+    "webpack": "^4.44.1"
+  },
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint ./src --ext=.ts",
+    "lint:fix": "eslint ./src --ext=.ts --fix",
+    "prebuild": "npm test",
+    "build": "cross-env BABEL_ENV=commonjs babel src -d lib --extensions .ts",
+    "build:watch": "cross-env BABEL_ENV=commonjs babel src -d lib --extensions .ts --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://10.73.1.87/iot/fe-lib-template.git"
+  },
+  "author": "kagawagao <kingsongao1221@gmail.com> (https://kingsongao.com/)",
+  "license": "MIT",
+  "files": [
+    "lib"
+  ],
+  "prettier": "@cisdi/prettier-config-cisdi",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts}": [
+      "eslint --fix"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  }
+}
