@@ -5,7 +5,7 @@
 ## Install
 
 ```bash
-npm i css-modules-typings-loader --save--dev
+npm i @opd/css-modules-typings-loader --save--dev
 ```
 
 ## Usage
@@ -19,7 +19,7 @@ module.exports = {
         test: /\.css$/,
         use: [
           {
-            loader: 'css-modules-typings-loader',
+            loader: '@opd/css-modules-typings-loader',
           },
           {
             loader: 'css-loader',

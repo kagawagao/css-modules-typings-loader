@@ -1,4 +1,4 @@
-const preset = require('@cisdi/jest-preset-cisdi/jest-preset')
+const preset = require('@opd/jest-preset-pangu/jest-preset')
 
 module.exports = {
   ...preset,
