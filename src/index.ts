@@ -41,7 +41,7 @@ const loader: webpack.loader.Loader = function (content: string, sourceMap) {
     ${declarations}
   }
   export const cssModules: CSSModules
-  export default cssModule
+  export default cssModules
 `
 
   const formattedContent = prettier.format(fileContent, {

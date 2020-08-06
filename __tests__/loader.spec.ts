@@ -12,7 +12,7 @@ const content = `interface CSSModules {
   b: string;
 }
 export const cssModules: CSSModules;
-export default cssModule;`
+export default cssModules;`
 const filePath = 'fixtures/example.module.css'
 const declarationFilePath = path.resolve(__dirname, filePath + '.d.ts')
 
