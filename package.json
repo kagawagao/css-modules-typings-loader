@@ -59,5 +59,17 @@
     "*.{json,md}": [
       "prettier --write"
     ]
-  }
+  },
+  "keywords": [
+    "css-modules",
+    "css",
+    "modules",
+    "typescript",
+    "webpack",
+    "loader",
+    "css modules",
+    "CSS Modules",
+    "CSSModules",
+    "typings"
+  ]
 }
