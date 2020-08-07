@@ -43,6 +43,11 @@ const loader: webpack.loader.Loader = function (content: string, sourceMap) {
     },
   })
 
+  if (!keys.length) {
+    callback(undefined, content)
+    return
+  }
+
   const declarations = keys.map((key) => `${key}: string;`).join('\n')
 
   const fileContent = `
@@ -63,10 +68,12 @@ const loader: webpack.loader.Loader = function (content: string, sourceMap) {
     .then(() => {
       callback(undefined, content)
     })
-    .catch((err) => {
-      // istanbul ignore next
-      callback(err, content)
-    })
+    // istanbul ignore next
+    .catch(
+      /* istanbul ignore next */ (err) => {
+        callback(err, content)
+      }
+    )
 }
 
 export default loader
