@@ -56,7 +56,10 @@ export default (fixture, options = {}): Promise<webpack.Stats> => {
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => {
       if (err) reject(err)
-      if (stats.hasErrors()) reject(new Error(stats.toJson().errors.toString()))
+      if (stats.hasErrors()) {
+        console.log(stats.toJson().errors)
+        reject(new Error(stats.toJson().errors.toString()))
+      }
 
       resolve(stats)
     })

@@ -23,7 +23,9 @@ function getDeclarationFilePath(filePath) {
 }
 
 function format(content: string) {
+  const config = prettier.resolveConfig.sync(__filename)
   return prettier.format(content, {
+    ...config,
     parser: 'typescript',
   })
 }

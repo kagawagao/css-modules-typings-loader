@@ -11,11 +11,12 @@ import prettier from 'prettier'
 //   properties: {},
 // }
 
-const loader: webpack.loader.Loader = function (content: string, sourceMap) {
+const loader: webpack.LoaderDefinition = function (content: string, sourceMap) {
   const callback = this.async()
   const declarationPath = this.resourcePath + '.d.ts'
   const parsed = parse(content, {
     sourceType: 'module',
+    ecmaVersion: 'latest',
   })
 
   const keys = []
@@ -57,8 +58,10 @@ const loader: webpack.loader.Loader = function (content: string, sourceMap) {
   export const cssModules: CSSModules
   export default cssModules
 `
+  const prettierConfig = prettier.resolveConfig.sync(declarationPath)
 
   const formattedContent = prettier.format(fileContent, {
+    ...prettierConfig,
     parser: 'typescript',
   })
 

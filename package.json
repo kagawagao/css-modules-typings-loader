@@ -4,8 +4,8 @@
   "description": "css modules typings loader for webpack",
   "main": "lib/index.js",
   "dependencies": {
-    "acorn": "^7.4.0",
-    "acorn-walk": "^7.2.0",
+    "acorn": "^8.4.0",
+    "acorn-walk": "^8.1.0",
     "prettier": "^2.0.5"
   },
   "publishConfig": {
@@ -17,17 +17,20 @@
     "@opd/eslint-config-pangu": "^1.5.0",
     "@opd/jest-preset-pangu": "^1.5.0",
     "@opd/prettier-config-pangu": "^1.2.0",
+    "@types/jest": "^26.0.23",
     "@types/loader-runner": "^2.2.3",
-    "@types/webpack": "^4.41.21",
+    "@types/prettier": "^2.3.0",
+    "@types/webpack": "^5.28.0",
+    "core-js": "^3.14.0",
     "cross-env": "^7.0.2",
-    "css-loader": "^4.2.0",
+    "css-loader": "^5.2.6",
     "husky": "^4.2.5",
-    "less-loader": "^6.2.0",
+    "less-loader": "^9.1.0",
     "lint-staged": "^10.2.11",
     "memfs": "^3.2.0",
     "regenerator-runtime": "^0.13.7",
     "typescript": "^3.9.7",
-    "webpack": "^4.44.1"
+    "webpack": "^5.39.0"
   },
   "scripts": {
     "test": "jest",
