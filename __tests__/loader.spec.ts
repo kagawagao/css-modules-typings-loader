@@ -4,41 +4,21 @@
 import compiler from './compiler'
 import path from 'path'
 import fs from 'fs'
-import { promisify } from 'util'
-import prettier from 'prettier'
 
-const content = `interface CSSModules {
-  a: string;
-  b: string;
-}
-export const cssModules: CSSModules;
-export default cssModules;`
 const filePath = 'fixtures/example.module.css'
 const noModulesFilePath = 'fixtures/no-modules.css'
 const namedCSSFilePath = 'fixtures/named.module.css'
 const lessFilePath = 'fixtures/less.module.less'
 
-function getDeclarationFilePath(filePath) {
+function getDeclarationFilePath(filePath: string) {
   return path.resolve(__dirname, filePath + '.d.ts')
-}
-
-function format(content: string) {
-  const config = prettier.resolveConfig.sync(__filename)
-  return prettier.format(content, {
-    ...config,
-    parser: 'typescript',
-  })
 }
 
 test('Basic', async () => {
   await compiler(filePath)
-  const output = await promisify(fs.readFile)(
-    getDeclarationFilePath(filePath),
-    {
-      encoding: 'utf-8',
-    }
-  )
-  expect(format(output)).toEqual(format(content))
+  const { default: cssModules } = await import(getDeclarationFilePath(filePath))
+  expect(cssModules.a).toBeDefined()
+  expect(cssModules.b).toBeDefined()
 })
 
 test('Named export', async () => {
@@ -47,14 +27,10 @@ test('Named export', async () => {
       namedExport: true,
     },
   })
-  const output = await promisify(fs.readFile)(
-    getDeclarationFilePath(namedCSSFilePath),
-    {
-      encoding: 'utf-8',
-    }
-  )
 
-  expect(format(output)).toEqual(format(content))
+  const { cssModules } = await import(getDeclarationFilePath(filePath))
+  expect(cssModules.a).toBeDefined()
+  expect(cssModules.b).toBeDefined()
 })
 
 test('No Modules', async () => {
@@ -75,11 +51,8 @@ test('Auto Modules', async () => {
 
 test('CSS Preprocessor', async () => {
   await compiler(lessFilePath)
-  const output = await promisify(fs.readFile)(
-    getDeclarationFilePath(lessFilePath),
-    {
-      encoding: 'utf-8',
-    }
-  )
-  expect(format(output)).toEqual(format(content))
+
+  const { default: cssModules } = await import(getDeclarationFilePath(filePath))
+  expect(cssModules.a).toBeDefined()
+  expect(cssModules.b).toBeDefined()
 })
