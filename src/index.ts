@@ -19,17 +19,17 @@ const loader: webpack.LoaderDefinition = function (content: string, sourceMap) {
     ecmaVersion: 'latest',
   })
 
-  const classes: Record<string, string> = {}
+  const keys = []
 
   simpleWalk(parsed, {
     ExpressionStatement(node) {
       simpleWalk(node, {
+        // console.log(node)
         AssignmentExpression(node: any) {
           simpleWalk(node, {
             Property(node: any) {
               const key = node.key.value
-              const value = node.value.value
-              classes[key] = value
+              keys.push(key)
             },
           })
         },
@@ -38,25 +38,24 @@ const loader: webpack.LoaderDefinition = function (content: string, sourceMap) {
     ExportNamedDeclaration(node) {
       simpleWalk(node, {
         VariableDeclarator(node: any) {
-          const key = node.id.name
-          const value = node.init.value
-          classes[key] = value
+          keys.push(node.id.name)
         },
       })
     },
   })
-
-  const keys = Object.keys(classes)
 
   if (!keys.length) {
     callback(undefined, content)
     return
   }
 
-  // const declarations = keys.map((key) => `${key}: string;`).join('\n')
+  const declarations = keys.map((key) => `${key}: string;`).join('\n')
 
   const fileContent = `
-  export const cssModules = ${JSON.stringify(classes, null, 2)}
+  interface CSSModules {
+    ${declarations}
+  }
+  export const cssModules: CSSModules
   export default cssModules
 `
   const prettierConfig = prettier.resolveConfig.sync(declarationPath)
