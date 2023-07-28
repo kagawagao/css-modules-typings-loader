@@ -4,7 +4,6 @@ import { simple as simpleWalk } from 'acorn-walk'
 import * as webpack from 'webpack'
 import fs from 'fs'
 import { promisify } from 'util'
-import prettier from 'prettier'
 
 // const schema = {
 //   type: 'object',
@@ -19,7 +18,7 @@ const loader: webpack.LoaderDefinition = function (content: string, sourceMap) {
     ecmaVersion: 'latest',
   })
 
-  const keys = []
+  const keys: string[] = []
 
   simpleWalk(parsed, {
     ExpressionStatement(node) {
@@ -58,14 +57,8 @@ const loader: webpack.LoaderDefinition = function (content: string, sourceMap) {
   export const cssModules: CSSModules
   export default cssModules
 `
-  const prettierConfig = prettier.resolveConfig.sync(declarationPath)
 
-  const formattedContent = prettier.format(fileContent, {
-    ...prettierConfig,
-    parser: 'typescript',
-  })
-
-  promisify(fs.writeFile)(declarationPath, formattedContent, {
+  promisify(fs.writeFile)(declarationPath, fileContent, {
     encoding: 'utf-8',
   })
     .then(() => {
