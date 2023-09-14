@@ -1,8 +1,9 @@
-import path from 'path'
-import webpack from 'webpack'
-import { createFsFromVolume, Volume } from 'memfs'
+import path from 'path';
+import webpack from 'webpack';
+import { createFsFromVolume, Volume } from 'memfs';
+import { promisify } from 'node:util';
 
-export default (fixture, options = {}): Promise<webpack.Stats> => {
+export default async (fixture: string, options = {}) => {
   const compiler = webpack({
     context: __dirname,
     entry: `./${fixture}`,
@@ -48,20 +49,10 @@ export default (fixture, options = {}): Promise<webpack.Stats> => {
         },
       ],
     },
-  })
+  });
 
-  compiler.outputFileSystem = createFsFromVolume(new Volume()) as any
-  compiler.outputFileSystem.join = path.join.bind(path)
+  compiler.outputFileSystem = createFsFromVolume(new Volume()) as any;
+  compiler.outputFileSystem.join = path.join.bind(path);
 
-  return new Promise((resolve, reject) => {
-    compiler.run((err, stats) => {
-      if (err) reject(err)
-      if (stats.hasErrors()) {
-        console.log(stats.toJson().errors)
-        reject(new Error(stats.toJson().errors.toString()))
-      }
-
-      resolve(stats)
-    })
-  })
-}
+  await promisify(compiler.run.bind(compiler))();
+};

@@ -1,7 +1,10 @@
-const preset = require('@opd/jest-preset-pangu/jest-preset')
+const preset = require('@wii/jest-preset-wii').default;
 
-module.exports = {
+/** @type {import('jest').Config} */
+const config = {
   ...preset,
-  setupFiles: ['./__tests__/setup.ts'],
+  setupFiles: [],
   testEnvironment: 'node',
-}
+};
+
+module.exports = config;
