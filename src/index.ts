@@ -1,9 +1,9 @@
 import { parse } from 'acorn';
 import { simple as simpleWalk } from 'acorn-walk';
 // import loaderUtils from 'loader-utils'
-import * as webpack from 'webpack';
 import fs from 'fs';
 import { promisify } from 'util';
+import * as webpack from 'webpack';
 
 // const schema = {
 //   type: 'object',
@@ -17,7 +17,8 @@ const loader: webpack.LoaderDefinition = async function (content: string) {
     ecmaVersion: 'latest',
   });
 
-  const keys: string[] = [];
+  const namedExportKeys: string[] = [];
+  const nestedExportKeys: string[] = [];
 
   simpleWalk(parsed, {
     ExpressionStatement(node) {
@@ -27,7 +28,7 @@ const loader: webpack.LoaderDefinition = async function (content: string) {
           simpleWalk(node, {
             Property(node: any) {
               const key = node.key.value;
-              keys.push(key);
+              nestedExportKeys.push(key);
             },
           });
         },
@@ -36,25 +37,33 @@ const loader: webpack.LoaderDefinition = async function (content: string) {
     ExportNamedDeclaration(node) {
       simpleWalk(node, {
         VariableDeclarator(node: any) {
-          keys.push(node.id.name);
+          namedExportKeys.push(node.id.name);
         },
       });
     },
   });
 
-  if (!keys.length) {
+  if (!nestedExportKeys.length && !namedExportKeys.length) {
     return content;
   }
 
-  const declarations = keys.map((key) => `${key}: string;`).join('\n');
+  const nestedExportDeclarations = nestedExportKeys.map((key) => `${key}: string;`).join('\n');
 
-  const fileContent = `
+  const namedExportDeclarations = namedExportKeys.map((key) => `export const ${key}: string;`).join('\n');
+
+  const nestedContent = nestedExportKeys.length
+    ? `
   interface CSSModules {
-    ${declarations}
+    ${nestedExportDeclarations}
   }
-  export const cssModules: CSSModules
-  export default cssModules
-`;
+  export const styles: CSSModules
+  export default styles
+`
+    : '';
+
+  const namedContent = namedExportKeys.length ? namedExportDeclarations : '';
+
+  const fileContent = [nestedContent, namedContent].join('\n');
 
   const prettier = (await import('prettier')).default;
 

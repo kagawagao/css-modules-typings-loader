@@ -1,17 +1,20 @@
 /**
  * @jest-environment node
  */
-import compiler from './compiler';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
 import { promisify } from 'util';
+import compiler from './compiler';
 
-const content = `interface CSSModules {
+const nestedExportContent = `interface CSSModules {
    a: string;
    b: string;
  }
- export const cssModules: CSSModules;
- export default cssModules;`;
+ export const styles: CSSModules;
+ export default styles;`;
+
+const namedExportContent = `export const a: string;
+  export const b: string;`;
 
 const filePath = 'fixtures/example.module.css';
 const noModulesFilePath = 'fixtures/no-modules.css';
@@ -37,7 +40,7 @@ test('Basic', async () => {
     encoding: 'utf-8',
   });
   const formattedOutput = await format(output);
-  const formattedContent = await format(content);
+  const formattedContent = await format(nestedExportContent);
   expect(formattedOutput).toEqual(formattedContent);
 });
 
@@ -52,7 +55,7 @@ test('Named export', async () => {
   });
 
   const formattedOutput = await format(output);
-  const formattedContent = await format(content);
+  const formattedContent = await format(namedExportContent);
   expect(formattedOutput).toEqual(formattedContent);
 });
 
@@ -78,6 +81,6 @@ test('CSS Preprocessor', async () => {
     encoding: 'utf-8',
   });
   const formattedOutput = await format(output);
-  const formattedContent = await format(content);
+  const formattedContent = await format(nestedExportContent);
   expect(formattedOutput).toEqual(formattedContent);
 });

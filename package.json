@@ -16,7 +16,6 @@
     "@types/jest": "^29.5.3",
     "@types/loader-runner": "^2.2.3",
     "@types/prettier": "^2.3.0",
-    "@types/webpack": "^5.28.0",
     "@wii/babel-preset-lib": "^2.1.0",
     "@wii/eslint-config-wii": "^2.3.1",
     "@wii/jest-preset-wii": "^2.3.1",
